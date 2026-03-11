@@ -1,0 +1,32 @@
+<h1>Welcome Interviewer</h1>
+<a href="/add-job/">Add Job</a><br><br>
+<a href="/logout/">Logout</a>
+<h2>Interviewer Dashboard</h2>
+
+{% for job in jobs %}
+    <h3>{{ job.title }}</h3>
+    <p>Company: {{ job.company_name }}</p>
+    <p>Location: {{ job.location }}</p>
+    <p>Salary: {{ job.salary }}</p>
+
+    <h4>Applicants:</h4>
+
+{% for application in job.application_set.all %}
+    <p>
+        {{ application.candidate.username }} 
+        - Status: {{ application.status }}
+        <br>
+        Applied on: {{ application.applied_at }}
+        <br>
+
+        <a href="{% url 'update_status' application.id 'Accepted' %}">Accept</a>
+        |
+        <a href="{% url 'update_status' application.id 'Rejected' %}">Reject</a>
+        |
+        <a href="{% url 'schedule_interview' application.id %}">Schedule Interview</a>
+    </p>
+{% empty %}
+    <p>No applicants yet.</p>
+{% endfor %}
+        <hr>
+{% endfor %}

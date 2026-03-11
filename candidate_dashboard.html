@@ -1,0 +1,51 @@
+<h1>Welcome Candidate</h1>
+<a href="/logout/">Logout</a>
+
+<h2>Available Jobs</h2>
+
+{% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+{% for job in jobs %}
+<div>
+
+    <h3>{{ job.title }}</h3>
+    <p><strong>Company:</strong> {{ job.company_name }}</p>
+    <p><strong>Location:</strong> {{ job.location }}</p>
+    <p><strong>Salary:</strong> {{ job.salary }}</p>
+
+    {% with applied=False %}
+        {% for app in applications %}
+            {% if app.job.id == job.id %}
+                {% with applied=True %}
+                    <p><strong>Status:</strong> {{ app.status }}</p>
+
+                    {% if app.interview_date %}
+                        <p><strong>Interview Date:</strong> {{ app.interview_date }}</p>
+                        <p><strong>Interview Time:</strong> {{ app.interview_time }}</p>
+
+                        {% if app.meeting_link %}
+                        <p>
+                            <strong>Meeting Link:</strong>
+                            <a href="{{ app.meeting_link }}" target="_blank">Join Interview</a>
+                        </p>
+                        {% endif %}
+                    {% endif %}
+                {% endwith %}
+            {% endif %}
+        {% endfor %}
+
+        {% if not applied %}
+            <a href="{% url 'apply_job' job.id %}">Apply</a>
+        {% endif %}
+    {% endwith %}
+
+    <hr>
+
+</div>
+{% empty %}
+<p>No jobs available.</p>
+{% endfor %}
